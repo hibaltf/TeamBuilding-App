@@ -1,0 +1,116 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h1 style="text-align: center">Students</h1><br>
+    <div class="row" [hidden]="!deleteMessage">
+
+      <div class="col-sm-4"></div>
+      <div class="col-sm-4">
+        <div class="alert alert-info alert-dismissible">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <strong>Student Data Deleted</strong>
+        </div>
+      </div>
+      <div class="col-sm-4"></div>
+    </div>
+  </div>
+
+
+  <div class="panel-body">
+    <table class="table table-hover table-sm" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
+      <thead class="thead-light">
+        <tr>
+          <th>Student Name</th>
+          <th>Student Email</th>
+          <th>Student Branch</th>
+          <th>Action</th>
+
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let student of students ">
+          <td>{{student.student_name}}</td>
+          <td>{{student.student_email}}</td>
+          <td>{{student.student_branch}}</td>
+          <td><button (click)="deleteStudent(student.student_id)" class='btn btn-primary'><i
+                class="fa fa-futboll-0">Delete</i></button>&nbsp;
+            <button (click)="triggerModal(myModal)" class='btn btn-info'>Update</button>
+          </td>
+          <ng-template #myModal let-modal>
+            <div class="modal-content">
+                <form [formGroup]="studentupdateform" (ngSubmit)="f.form.valid && updateStudent(updstu)" #f="ngForm">
+                  <!-- Modal Header -->
+                  <div class="modal-header">
+                    <h4 class="modal-title" style="text-align: center">Update Student</h4>
+          
+                  </div>
+          
+                  <!-- Modal body -->
+                  <div class="modal-body" >
+                    
+          
+                      <input type="hidden" class="form-control" formControlName="student_id" [(ngModel)]="student.student_id">
+          
+                      <div class="form-group">
+                        <label for="name">Student Name</label>
+                        <input type="text" class="form-control" formControlName="student_name" data-toggle="tooltip"
+                          data-placement="right" title="Enter Student Name" [(ngModel)]="student.student_name">
+                        <div class="alert alert-danger"
+                          *ngIf="((StudentName.touched) && (StudentName.invalid) || (f.submitted) && (StudentName.invalid)) "
+                          style="margin-top: 5px;">
+                          <span *ngIf="StudentName.errors.required">Student Name is Required</span>
+                          <span *ngIf="StudentName.errors.minlength">
+                            MinLength Error
+                          </span>
+                        </div>
+                      </div>
+          
+                      <div class="form-group">
+                        <label for="name">Student Email</label>
+                        <input type="text" class="form-control" formControlName="student_email" data-toggle="tooltip"
+                          data-placement="right" title="Enter Student Name" [(ngModel)]="student.student_email">
+                        <div class="alert alert-danger"
+                          *ngIf="((StudentEmail.touched) && (StudentEmail.invalid) || (f.submitted) && (StudentEmail.invalid)) "
+                          style="margin-top: 5px;">
+                          <span *ngIf="StudentEmail.errors.required">Student Email is Required</span>
+                          <span *ngIf="StudentEmail.errors.email">
+                            Invalid Email Format
+                          </span>
+                        </div>
+                        <div class="alert alert-danger" *ngIf="(f.submitted && error)">
+                          <span>Student Email already exisits</span>
+                        </div>
+                      </div>
+          
+                      <div class="form-group">
+                        <label for="branch">Student Branch</label>
+                        <select class="form-control" formControlName="student_branch" data-toggle="tooltip" data-placement="right"
+                          title="Select Student Branch" [(ngModel)]="student.student_branch">
+                          <option value="Expert Reseaux">Expert Reseaux</option>
+                          <option value="Data Science">Data Science</option>
+                        </select>
+                        <div class="alert alert-danger"
+                          *ngIf="((StudentBranch.touched) && (StudentBranch.invalid) || (f.submitted) && (StudentBranch.invalid)) "
+                          style="margin-top: 5px;">
+                          <span *ngIf="StudentBranch.errors.required">Student Branch is required</span>
+                        </div>
+                      </div>
+                    
+                    
+          
+                  </div>
+          
+                  <!-- Modal footer -->
+                  <div class="modal-footer">
+                    <button type="submit" class="btn btn-success" >Update</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="myModal" (click)="cancel()">Close</button>
+                  </div>
+          
+                </form>
+            </div>
+          </ng-template>
+        </tr>
+      </tbody><br>
+    </table>
+  </div>
+</div>
+

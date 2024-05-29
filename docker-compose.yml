@@ -1,0 +1,35 @@
+version: '3'
+services:
+  mydb:
+        image: 'mysql:latest'
+        environment:
+          - MYSQL_ROOT_PASSWORD=root
+          - MYSQL_PASSWORD=root
+          - MYSQL_DATABASE=crud
+        ports:
+          - "3306:3306"
+        volumes:
+         - volume:/var/lib/mysql
+        healthcheck:
+          test: "exit 0"
+
+  frontend:
+      image: 'crud:front'
+      ports:
+        - "4200:80"
+      depends_on:
+            - backend
+  backend:
+    image: crud:back
+    ports:
+      - "8765:8765"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mydb:3306/crud?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "root"
+    depends_on:
+      mydb:
+        condition: service_healthy
+  
+volumes:
+  volume:
