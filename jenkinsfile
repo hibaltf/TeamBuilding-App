@@ -1,0 +1,43 @@
+pipeline {
+    agent any
+    tools {
+        maven 'Maven'
+        jdk 'JDK 8'
+    }
+
+    stages {
+        stage('Clone project from Github') {
+            steps {
+                git 'https://github.com/hibaltf/crud.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                bat 'mvn -f backend/pom.xml clean -Dmaven.test.skip=true install'
+            }
+        }
+        stage('Docker Build and Deploy') {
+            steps {
+                powershell '''
+                    docker-compose down
+                    docker rmi crud:front
+                    docker rmi crud:back
+                    cd frontend
+                    docker build --tag crud:front .
+                    cd ../backend
+                    docker build --tag crud:back .
+                    cd ..
+                    docker-compose up -d
+                '''
+            }
+        }
+        stage('Test') {
+            steps {
+                bat 'mvn -f backend/pom.xml test'
+            }
+        }
+    }
+}
+
+
+
