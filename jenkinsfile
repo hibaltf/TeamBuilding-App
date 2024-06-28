@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Clone project from Github') {
             steps {
-                git 'https://github.com/hibaltf/crud.git'
+                git branch: 'main', url: 'https://github.com/hibaltf/crud.git'
             }
         }
         stage('Build') {
