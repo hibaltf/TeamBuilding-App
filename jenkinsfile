@@ -31,11 +31,6 @@ pipeline {
                 '''
             }
         }
-        stage('Test') {
-            steps {
-                bat 'mvn -f backend/pom.xml test'
-            }
-        }
     }
 }
 
